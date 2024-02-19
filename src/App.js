@@ -30,6 +30,7 @@ function Button({ onClick, children }) {
 }
 
 export default function App() {
+    const [friends, setFriends] = useState(initialFriends);
     const [showAddFriendForm, setShowAddFriendForm] = useState(false);
 
     function handleShowAddFirendForm() {
@@ -40,7 +41,7 @@ export default function App() {
         <div className="app">
             <div className="sidebar">
                 <h1>My Friends</h1>
-                <FriendsList />
+                <FriendsList friends={friends} />
                 {showAddFriendForm && <FormAddFriend />}
                 <Button onClick={handleShowAddFirendForm}>
                     {showAddFriendForm ? "Close" : "Add a Friend"}
@@ -51,9 +52,7 @@ export default function App() {
     );
 }
 
-function FriendsList() {
-    const friends = initialFriends;
-
+function FriendsList({ friends }) {
     return (
         <div>
             <h2>Friends</h2>
