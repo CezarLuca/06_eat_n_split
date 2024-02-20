@@ -35,6 +35,9 @@ export default function App() {
     const [selectedFriend, setSelectedFriend] = useState(null);
 
     function handleShowAddFirendForm() {
+        // if (!showAddFriendForm) {
+        //     setSelectedFriend(null);
+        // }
         setShowAddFriendForm(!showAddFriendForm);
     }
 
@@ -44,7 +47,16 @@ export default function App() {
     }
 
     function handleSelectFriend(friend) {
-        setSelectedFriend(friend);
+        // setSelectedFriend(friend);
+        // if (selectedFriend?.id === friend) { // if selectedFriend is not null or undefined then check the id
+        if (selectedFriend && selectedFriend.id === friend.id) {
+            // same as above
+            setSelectedFriend(null);
+        } else {
+            setSelectedFriend(friend);
+            setShowAddFriendForm(false);
+        }
+        // setShowAddFriendForm(false);
     }
 
     return (
@@ -53,6 +65,7 @@ export default function App() {
                 <h1>My Friends</h1>
                 <FriendsList
                     friends={friends}
+                    selectedFriend={selectedFriend}
                     onSelectFirend={handleSelectFriend}
                 />
                 {showAddFriendForm && (
@@ -69,7 +82,7 @@ export default function App() {
     );
 }
 
-function FriendsList({ friends, onSelectFirend }) {
+function FriendsList({ friends, selectedFriend, onSelectFirend }) {
     return (
         <div>
             <h2>Friends</h2>
@@ -78,6 +91,7 @@ function FriendsList({ friends, onSelectFirend }) {
                     <Friend
                         friend={friend}
                         key={friend.id}
+                        selectedFriend={selectedFriend}
                         onSelectFirend={onSelectFirend}
                     />
                 ))}
@@ -86,10 +100,13 @@ function FriendsList({ friends, onSelectFirend }) {
     );
 }
 
-function Friend({ friend, onSelectFirend }) {
+function Friend({ friend, key, selectedFriend, onSelectFirend }) {
+    // const isSelected = selectedFriend?.id === friend.id; // optional chaining operator (?.)
+    const isSelected = selectedFriend && selectedFriend.id === friend.id; // same as above
+
     return (
-        <li>
-            <img src={friend.image} alt={friend.name} />
+        <li className={isSelected ? "selected" : ""}>
+            <img src={friend.image} alt={`${friend.name} ${key}`} />
             <h3>{friend.name}</h3>
             {friend.balance < 0 && (
                 <p className="red">
@@ -103,7 +120,9 @@ function Friend({ friend, onSelectFirend }) {
             )}
             {friend.balance === 0 && <p>You and {friend.name} are even.</p>}
 
-            <Button onClick={() => onSelectFirend(friend)}>Select</Button>
+            <Button onClick={() => onSelectFirend(friend)}>
+                {isSelected ? "Close" : "Select"}
+            </Button>
         </li>
     );
 }
