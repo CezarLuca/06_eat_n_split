@@ -181,8 +181,23 @@ function FormSplitBill({ selectedFriend }) {
     const [youPay, setYouPay] = useState(true);
     let payer = youPay ? "user" : "friend";
 
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        if (!bill || !yourExpenses) {
+            return;
+        }
+
+        console.log({
+            bill,
+            yourExpenses,
+            friendExpenses,
+            payer,
+        });
+    }
+
     return (
-        <form className="form-split-bill">
+        <form className="form-split-bill" onSubmit={handleSubmit}>
             <h2>Split a Bill with {selectedFriend.name}</h2>
             <label>💸Total Amount</label>
             <input
